@@ -10,6 +10,7 @@ const {
 const {
     registerPrompt
 } = require("inquirer");
+const { up } = require("inquirer/lib/utils/readline");
 
 // creates the connection server.js and mySQL
 const db = mysql.createConnection({
@@ -109,9 +110,25 @@ function updateRole() {
                     message: "which role would you like to assign to the selected employee?",
                     name: "roleChoice",
                     choices: allEmployees.map(inner => Object.values(inner)[2]),
-                }
+                },
             ])
-        }
+            const name = "Mikayla";
+            const updateQuery = "UPDATE employee SET role_id = 5 WHERE first_name = ?";
+            db.query(updateQuery, name, function (err, results) {
+                if (err) {
+                    console.error(err);
+                    process.exit(1);
+                }
+                console.log("Employee role updated!");
+            })
+            db.query("SELECT * FROM employee", function (err, results) {
+                if (err) {
+                    console.error(err);
+                    process.exit(1);
+                }
+                console.table(results);
+            })
+        },
     )
 }
 
