@@ -98,5 +98,19 @@ function viewDepartments() {
     })
 }
 
+// View all Employees 
+function viewEmployees() {
+    const sql = "SELECT * FROM employee";
+    db.query(sql, function (err, results) {
+        if (err) {
+            console.table(err);
+        }
+        console.table(results);
+        starter();
+    })
+}
+
+
+
 //Starts program
 starter();
