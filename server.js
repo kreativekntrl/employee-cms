@@ -1,18 +1,5 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
-const {
-    listen,
-    all
-} = require("express/lib/application");
-const {
-    response
-} = require("express");
-const {
-    registerPrompt
-} = require("inquirer");
-const {
-    up
-} = require("inquirer/lib/utils/readline");
 
 // creates the connection server.js and mySQL
 const db = mysql.createConnection({
@@ -80,7 +67,7 @@ function starter() {
 
 // View all roles
 function viewRoles() {
-    const sql = "SELECT * FROM roles";
+    const sql = "SELECT title FROM roles";
     db.query(sql, function (err, results) {
         if (err) {
             console.table(err);
@@ -174,7 +161,7 @@ function addRole() {
 
 // View all departments
 function viewDepartments() {
-    const sql = "SELECT * FROM department";
+    const sql = "SELECT dpt_name FROM department";
     db.query(sql, function (err, results) {
         if (err) {
             console.table(err);
@@ -223,7 +210,7 @@ function addDepartment() {
 
 // View all Employees 
 function viewEmployees() {
-    const sql = "SELECT * FROM employee";
+    const sql = "SELECT first_name, last_name FROM employee";
     db.query(sql, function (err, results) {
         if (err) {
             console.table(err);
@@ -279,8 +266,6 @@ function addEmployee() {
         },
     )
 }
-
-
 
 //Starts program
 starter();
