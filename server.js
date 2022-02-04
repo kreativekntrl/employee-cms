@@ -10,7 +10,9 @@ const {
 const {
     registerPrompt
 } = require("inquirer");
-const { up } = require("inquirer/lib/utils/readline");
+const {
+    up
+} = require("inquirer/lib/utils/readline");
 
 // creates the connection server.js and mySQL
 const db = mysql.createConnection({
@@ -127,6 +129,43 @@ function updateRole() {
                     process.exit(1);
                 }
                 console.table(results);
+                starter();
+            })
+        },
+    )
+}
+
+// ADD role 
+function addRole() {
+    db.query(
+        "SELECT first_name, last_name, title FROM department JOIN roles ON department.id = roles.dpt_id JOIN employee ON employee.role_id = roles.id;",
+        async function (err, allRoles) {
+            if (err) {
+                console.error(err);
+                process.exit(1);
+            }
+            const {
+                newRole
+            } = await inquirer.prompt([{
+                type: "input",
+                message: "What is the title of the role you would like to add?",
+                name: "newRole",
+            }, ])
+            const addQuery = "INSERT INTO roles (title, salary, dpt_id) VALUES ('Bosswoman', 500.0, 3)";
+            db.query(addQuery, function (err) {
+                if (err) {
+                    console.error(err);
+                    process.exit(1);
+                }
+                console.log("Role added!");
+            })
+            db.query("SELECT * FROM roles", function (err, results) {
+                if (err) {
+                    console.error(err);
+                    process.exit(1);
+                }
+                console.table(results);
+                starter();
             })
         },
     )
@@ -145,6 +184,43 @@ function viewDepartments() {
     })
 }
 
+// Add Department
+function addDepartment() {
+    db.query(
+        "SELECT first_name, last_name, title FROM department JOIN roles ON department.id = roles.dpt_id JOIN employee ON employee.role_id = roles.id;",
+        async function (err) {
+            if (err) {
+                console.error(err);
+                process.exit(1);
+            }
+            const {
+                newDepartment
+            } = await inquirer.prompt([{
+                type: "input",
+                message: "What is the name of the department you would like to add?",
+                name: "newDepartment",
+            }, ])
+            const addQuery = "INSERT INTO department (dpt_name) VALUES ('HR')";
+            db.query(addQuery, function (err) {
+                if (err) {
+                    console.error(err);
+                    process.exit(1);
+                }
+                console.log("Department added!");
+            })
+            db.query("SELECT * FROM department", function (err, results) {
+                if (err) {
+                    console.error(err);
+                    process.exit(1);
+                }
+                console.table(results);
+                starter();
+            })
+        },
+    )
+}
+
+
 // View all Employees 
 function viewEmployees() {
     const sql = "SELECT * FROM employee";
@@ -155,6 +231,53 @@ function viewEmployees() {
         console.table(results);
         starter();
     })
+}
+
+//ADDS employee 
+function addEmployee() {
+    db.query(
+        "SELECT first_name, last_name, title FROM department JOIN roles ON department.id = roles.dpt_id JOIN employee ON employee.role_id = roles.id;",
+        async function (err) {
+            if (err) {
+                console.error(err);
+                process.exit(1);
+            }
+            const {
+                newEmployee
+            } = await inquirer.prompt([{
+                    type: "input",
+                    message: "What is the first name of the employee you would like to add?",
+                    name: "addFirstName",
+                },
+                {
+                    type: "input",
+                    message: "What is the last name of the employee you would like to add?",
+                    name: "addLastName",
+                },
+                {
+                    type: "input",
+                    message: "What is the role of the employee you would like to add?",
+                    name: "addRole",
+                }
+            ])
+            const addQuery = "INSERT INTO employee (first_name, last_name, role_id) VALUES ('Malia', 'Davis', 2)";
+            db.query(addQuery, function (err) {
+                if (err) {
+                    console.error(err);
+                    process.exit(1);
+                }
+                console.log("Employee added!");
+            })
+            db.query("SELECT * FROM employee", function (err, results) {
+                if (err) {
+                    console.error(err);
+                    process.exit(1);
+                }
+                console.table(results);
+                starter();
+            })
+        },
+    )
 }
 
 
