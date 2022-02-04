@@ -1,7 +1,8 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const {
-    listen
+    listen,
+    all
 } = require("express/lib/application");
 const {
     response
@@ -19,7 +20,7 @@ const db = mysql.createConnection({
 });
 
 //MAIN MENU PROMPT 
-function starter () {
+function starter() {
     db.query(
         "SELECT employee.id, first_name, last_name, title, salary, dpt_name FROM department JOIN roles ON department.id = roles.dpt_id JOIN employee ON employee.role_id = roles.id;",
         async function (err) {
@@ -85,6 +86,35 @@ function viewRoles() {
         starter();
     })
 }
+
+// UPDATE role
+function updateRole() {
+    db.query(
+        "SELECT first_name, last_name, title FROM department JOIN roles ON department.id = roles.dpt_id JOIN employee ON employee.role_id = roles.id;",
+        async function (err, allEmployees) {
+            if (err) {
+                console.error(err);
+                process.exit(1);
+            }
+            const {
+                employeeMenu
+            } = await inquirer.prompt([{
+                    type: "list",
+                    message: "Which employee's role would you like to update",
+                    name: "employeeChoice",
+                    choices: allEmployees.map(inner => Object.values(inner)[0]),
+                },
+                {
+                    type: "list",
+                    message: "which role would you like to assign to the selected employee?",
+                    name: "roleChoice",
+                    choices: allEmployees.map(inner => Object.values(inner)[2]),
+                }
+            ])
+        }
+    )
+}
+
 
 // View all departments
 function viewDepartments() {
